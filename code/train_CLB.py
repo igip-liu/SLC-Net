@@ -220,8 +220,7 @@ def train(args, snapshot_path):
                           torch.sum(preds * torch.log(preds + 1e-6), dim=1, keepdim=True)
             threshold = (0.75 + 0.25 * ramps.sigmoid_rampup(iter_num,
                                                             max_iterations)) * np.log(2)
-            #mask = (uncertainty < threshold).float()
-            mask = torch.exp(-uncertainty)
+            mask = (uncertainty < threshold).float()
             pseudo_outputs1 = torch.argmax(outputs_soft1[args.labeled_bs:].detach(), dim=1, keepdim=False)
             pseudo_outputs2 = torch.argmax(outputs_soft2[args.labeled_bs:].detach(), dim=1, keepdim=False)
 
