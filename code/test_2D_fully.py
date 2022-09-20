@@ -27,9 +27,9 @@ parser.add_argument('--num_classes', type=int,  default=4,
                     help='output channel of network')
 parser.add_argument('--labeled_num', type=int, default=3,
                     help='labeled data')
-parser.add_argument('--use_catseg', action='store_true',
+parser.add_argument('--use_shape', action='store_true',
                     default=False,
-                    help='--use_catseg')
+                    help='use_shape')
 
 
 def calculate_metric_percase(pred, gt):
@@ -203,7 +203,7 @@ def Inference1(FLAGS):
 
 if __name__ == '__main__':
     FLAGS = parser.parse_args()
-    if FLAGS.use_catseg:
+    if FLAGS.use_shape:
         metric = Inference1(FLAGS)
     else:
         metric = Inference(FLAGS)
