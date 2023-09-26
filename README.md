@@ -5,15 +5,15 @@ consistency with shape-aware and local context constraints'
 ## Requirements
 Some important required packages include:
 
-*Pytorch version >=0.4.1.
+* Pytorch version >=0.4.1.
 
-*TensorBoardX
+* TensorBoardX
 
-*Python == 3.7
+* Python == 3.7
 
-*Efficientnet-Pytorch
+* Efficientnet-Pytorch
 
-*Some basic python packages such as Numpy, Scikit-image, SimpleITK, Scipy，Batchgenerators ......
+* Some basic python packages such as Numpy, Scikit-image, SimpleITK, Scipy，Batchgenerators ......
 
 ## Usage
 
