@@ -15,14 +15,14 @@ Some important required packages include:
 
 *Some basic python packages such as Numpy, Scikit-image, SimpleITK, Scipy，Batchgenerators ......
 
-#Usage
+## Usage
 
-##1、Clone the repo.;
+### 1、Clone the repo.;
 ```
 git clone https://github.com/igip-liu/SLC-Net.git
 ```
 
-##2、Data Preparation;
+### 2、Data Preparation;
 
 The division method of training set/validation set/test set can be seen:
 
@@ -48,14 +48,14 @@ cd SLC-Net/code/dataloaders
 
 python acdc_data_processing.py
 ```
-##3、Train the model;
+### 3、Train the model;
 
 ```
 cd SLC-Net/code
 
 CUDA_VISIBLE_DEVICES=3 python train_CLB.py --root_path ../data/ACDC --exp ACDC/SLC-Net --num_classes 4 --labeled_num 7 --use_block_dice_loss --block_num 4
 ```
-##4、Test the model;
+### 4、Test the model;
 ```
 cd SLC-Net/code
 
