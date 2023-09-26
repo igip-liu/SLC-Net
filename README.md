@@ -24,7 +24,7 @@ git clone https://github.com/igip-liu/SLC-Net.git
 
 ### 2、Data Preparation;
 
-The division method of training set/validation set/test set can be seen:
+The division method of training/validation/test set can be seen:
 
 [ACDC dataset](https://github.com/igip-liu/SLC-Net/tree/main/data/ACDC)
 
