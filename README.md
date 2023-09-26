@@ -17,7 +17,7 @@ Some important required packages include:
 
 ## Usage
 
-### 1、Clone the repo.;
+### 1、Clone the repo;
 ```
 git clone https://github.com/igip-liu/SLC-Net.git
 ```
