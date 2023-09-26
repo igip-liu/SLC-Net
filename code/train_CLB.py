@@ -19,7 +19,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision.utils import make_grid
 from tqdm import tqdm
-
+from bezier_curve import bezier_curve
 from dataloaders import utils
 from dataloaders.dataset import (BaseDataSets, RandomGenerator,
                                  TwoStreamBatchSampler)
@@ -68,6 +68,60 @@ parser.add_argument('--block_num', type=int,  default=4,
 parser.add_argument('--model2_inchns', type=int,  default=5,
                     help='model2_inchns')
 args = parser.parse_args()
+
+
+def nonlinear_transformation(slices, flag = True):
+
+    if flag:
+        random_num = random.random()
+        if random_num <= 0.4:
+            return (slices + 1) / 2
+        if random_num > 0.4 and random_num <= 0.7:
+            points_2 = [[-1, -1], [-0.5, 0.5], [0.5, -0.5], [1, 1]]
+            xvals_2, yvals_2 = bezier_curve(points_2, nTimes=10000)
+            xvals_2 = np.sort(xvals_2)
+            yvals_2 = np.sort(yvals_2)
+            nonlinear_slices_2 = np.interp(slices, xvals_2, yvals_2)
+            return (nonlinear_slices_2 + 1) / 2
+        if random_num > 0.7:
+            points_4 = [[-1, -1], [-0.75, 0.75], [0.75, -0.75], [1, 1]]
+            xvals_4, yvals_4 = bezier_curve(points_4, nTimes=10000)
+            xvals_4 = np.sort(xvals_4)
+            yvals_4 = np.sort(yvals_4)
+            nonlinear_slices_4 = np.interp(slices, xvals_4, yvals_4)
+            return (nonlinear_slices_4 + 1) / 2
+    else:
+        random_num = random.random()
+        if random_num <= 0.4:
+            points_1 = [[-1, -1], [-1, -1], [1, 1], [1, 1]]
+            xvals_1, yvals_1 = bezier_curve(points_1, nTimes=10000)
+            xvals_1 = np.sort(xvals_1)
+            nonlinear_slices_1 = np.interp(slices, xvals_1, yvals_1)
+            nonlinear_slices_1[nonlinear_slices_1 == 1] = -1
+            return (nonlinear_slices_1 + 1) / 2
+        if random_num > 0.4 and random_num <= 0.7:
+            points_3 = [[-1, -1], [-0.5, 0.5], [0.5, -0.5], [1, 1]]
+            xvals_3, yvals_3 = bezier_curve(points_3, nTimes=10000)
+            xvals_3 = np.sort(xvals_3)
+            nonlinear_slices_3 = np.interp(slices, xvals_3, yvals_3)
+            nonlinear_slices_3[nonlinear_slices_3 == 1] = -1
+            return (nonlinear_slices_3 + 1) / 2
+        if random_num > 0.7:
+            points_5 = [[-1, -1], [-0.75, 0.75], [0.75, -0.75], [1, 1]]
+            xvals_5, yvals_5 = bezier_curve(points_5, nTimes=10000)
+            xvals_5 = np.sort(xvals_5)
+            nonlinear_slices_5 = np.interp(slices, xvals_5, yvals_5)
+            nonlinear_slices_5[nonlinear_slices_5 == 1] = -1
+            return (nonlinear_slices_5 + 1) / 2
+
+    """
+    slices, nonlinear_slices_2, nonlinear_slices_4 are source-similar images
+    nonlinear_slices_1, nonlinear_slices_3, nonlinear_slices_5 are source-dissimilar images
+    """
+
+
+    # return slices, nonlinear_slices_1, nonlinear_slices_2, \
+    #        nonlinear_slices_3, nonlinear_slices_4, nonlinear_slices_5
 
 def kaiming_normal_init_weight(model):
     for m in model.modules():
@@ -179,12 +233,26 @@ def train(args, snapshot_path):
 
             volume_batch, label_batch = sampled_batch['image'], sampled_batch['label']
             volume_batch, label_batch = volume_batch.cuda(), label_batch.cuda()
-
-            outputs1  = model1(volume_batch)
+            if iter_num < 0:
+                volume_batch_model1 = volume_batch
+                volume_batch_model2 = volume_batch
+            else:
+                volume_batch_model1 = torch.zeros_like(volume_batch)
+                volume_batch_model2 = torch.zeros_like(volume_batch)
+                for i in range(volume_batch.shape[0]):
+                    slices = nonlinear_transformation(volume_batch[i, 0].cpu().numpy() * 2 - 1, True)
+                    volume_batch_model1[i, 0] = torch.from_numpy(slices).cuda()
+                for i in range(volume_batch.shape[0]):
+                    slices = nonlinear_transformation(volume_batch[i, 0].cpu().numpy() * 2 - 1, False)
+                    volume_batch_model2[i, 0] = torch.from_numpy(slices).cuda()
+            outputs1  = model1(volume_batch_model1)
             outputs_soft1 = torch.softmax(outputs1, dim=1)
             noise = torch.clamp(torch.randn_like(
-                volume_batch) * 0.1, -0.05, 0.05)
-            volume_batch1 = torch.cat((volume_batch + noise, outputs_soft1), dim=1)
+                volume_batch_model2) * 0.1, -0.05, 0.05)
+            if iter_num < 0:
+                volume_batch1 = torch.cat((volume_batch_model2 + noise, outputs_soft1), dim=1)
+            else:
+                volume_batch1 = torch.cat((volume_batch_model2 + noise, 1 - outputs_soft1), dim=1)
             outputs2 = model2(volume_batch1)
             outputs_soft2 = torch.softmax(outputs2, dim=1)
             consistency_weight = get_current_consistency_weight(iter_num // 150)
@@ -200,7 +268,7 @@ def train(args, snapshot_path):
             else:
                 loss2 = 0.5 * (ce_loss(outputs2[:args.labeled_bs], label_batch[:][:args.labeled_bs].long()) + dice_loss(
                     outputs_soft2[:args.labeled_bs], label_batch[:args.labeled_bs].unsqueeze(1)))
-            unlabeled_volume_batch = volume_batch[args.labeled_bs:]
+            unlabeled_volume_batch = volume_batch_model1[args.labeled_bs:]
             T = 8
             _, _, w, h = unlabeled_volume_batch.shape
             volume_batch_r = unlabeled_volume_batch.repeat(2, 1, 1, 1)
