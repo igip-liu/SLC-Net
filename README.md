@@ -1,6 +1,7 @@
 # SLC-Net
 This repository is for our paper 'Semi-supervised medical image segmentation using cross-style
 consistency with shape-aware and local context constraints'
+
 ## Requirements
 Some important required packages include:
 
@@ -15,12 +16,14 @@ Some important required packages include:
 *Some basic python packages such as Numpy, Scikit-image, SimpleITK, Scipy，Batchgenerators ......
 
 #Usage
+
 ##1、Clone the repo.;
 ```
 git clone https://github.com/igip-liu/SLC-Net.git
 ```
 
 ##2、Data Preparation;
+
 The division method of training set/validation set/test set can be seen:
 
 [ACDC dataset](https://github.com/igip-liu/SLC-Net/tree/main/data/ACDC)
