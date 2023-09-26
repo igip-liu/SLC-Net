@@ -1,6 +1,6 @@
 # SLC-Net
-This repository is for our paper 'Semi-supervised medical image segmentation using cross-style
-consistency with shape-aware and local context constraints'
+This repository is for our paper "Semi-supervised medical image segmentation using cross-style
+consistency with shape-aware and local context constraints"
 
 ## Requirements
 Some important required packages include:
