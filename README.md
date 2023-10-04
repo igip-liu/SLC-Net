@@ -30,7 +30,7 @@ The division method of training/validation/test set can be seen:
 
 [Prostate dataset](https://github.com/igip-liu/SLC-Net/tree/main/data/Prostate)
 
-[NIH Pancrea](https://github.com/igip-liu/SLC-Net/tree/main/data/Pancreas)
+[NIH Pancrea dataset](https://github.com/igip-liu/SLC-Net/tree/main/data/Pancreas)
 
 The processed data that can be used to train our code can be seen:
 
