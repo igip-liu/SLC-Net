@@ -36,7 +36,7 @@ The data that can be used to train our code can be seen:
 
 [ACDC dataset](https://www.creatis.insa-lyon.fr/Challenge/acdc/databases.html)
 
-[Prostate dataset](https://promise12.grand-challenge.org)
+[Prostate dataset](https://promise12.grand-challenge.org/)
 
 [NIH Pancrea dataset](https://wiki.cancerimagingarchive.net/display/Public/Pancreas-CT)
 
