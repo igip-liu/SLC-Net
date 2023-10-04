@@ -32,13 +32,13 @@ The division method of training/validation/test set can be seen:
 
 [NIH Pancrea dataset](https://github.com/igip-liu/SLC-Net/tree/main/data/Pancreas)
 
-The processed data that can be used to train our code can be seen:
+The data that can be used to train our code can be seen:
 
-[ACDC dataset](https://github.com/igip-liu/SLC-Net/tree/main/data/ACDC/data)
+[ACDC dataset](https://www.creatis.insa-lyon.fr/Challenge/acdc/databases.html)
 
-[Prostate dataset](https://github.com/igip-liu/SLC-Net/tree/main/data/Prostate/data)
+[Prostate dataset](https://promise12.grand-challenge.org/)
 
-[NIH Pancrea dataset](https://github.com/yulequan/UA-MT/tree/master/data)
+[NIH Pancrea dataset](https://wiki.cancerimagingarchive.net/display/Public/Pancreas-CT)
 
 The division of labeled/unlabeled datasets can be found in [this code](https://github.com/igip-liu/SLC-Net/blob/main/code/train_CLB.py)
 
